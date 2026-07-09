@@ -1,0 +1,68 @@
+# Copia este archivo a config/jarvis.yaml y ajústalo.
+# Los valores ${VAR} se sustituyen con variables de entorno (.env).
+
+agent:
+  model: claude-opus-4-8
+  # low = respuestas más rápidas (recomendado para voz); sube a medium/high
+  # si notas que le falta profundidad en tareas complejas.
+  effort: low
+  max_tokens: 16000
+  language: es
+
+voice:
+  stt:
+    provider: deepgram
+    model: nova-2
+    language: es
+    sample_rate: 16000
+    # ms de silencio para dar por terminada la frase (más bajo = más ágil,
+    # pero puede cortar frases con pausas largas)
+    endpointing_ms: 300
+  tts:
+    provider: elevenlabs
+    model: eleven_flash_v2_5   # el modelo más rápido de ElevenLabs
+    sample_rate: 16000
+
+# Cuentas de correo de la empresa que Jarvis puede revisar y desde las
+# que puede redactar respuestas (que TÚ confirmas antes de enviar).
+email_accounts:
+  - name: ventas
+    imap_host: imap.gmail.com
+    imap_port: 993
+    smtp_host: smtp.gmail.com
+    smtp_port: 587
+    user: ventas@miempresa.com
+    password: ${EMAIL_VENTAS_PASSWORD}
+  - name: soporte
+    imap_host: imap.gmail.com
+    imap_port: 993
+    smtp_host: smtp.gmail.com
+    smtp_port: 587
+    user: soporte@miempresa.com
+    password: ${EMAIL_SOPORTE_PASSWORD}
+
+# Servidores MCP: ERP, CRM y cualquier otro sistema que exponga MCP.
+# Sus herramientas se cargan automáticamente y Jarvis puede usarlas.
+mcp_servers:
+  - name: erp
+    transport: http            # http (streamable) o stdio
+    url: https://erp.miempresa.com/mcp
+    headers:
+      Authorization: Bearer ${ERP_MCP_TOKEN}
+    # Herramientas que Jarvis NO puede usar nunca (patrones glob)
+    blocked_tools: ["delete_*"]
+    # Herramientas que requieren que el usuario confirme verbalmente
+    # antes de ejecutarse (patrones glob sobre el nombre de la tool)
+    confirm_tools: ["create_*", "update_*", "post_*"]
+  - name: crm
+    transport: http
+    url: https://crm.miempresa.com/mcp
+    headers:
+      Authorization: Bearer ${CRM_MCP_TOKEN}
+    confirm_tools: ["create_*", "update_*", "delete_*"]
+
+notifications:
+  telegram:
+    enabled: false
+    bot_token: ${TELEGRAM_BOT_TOKEN}
+    chat_id: ${TELEGRAM_CHAT_ID}
