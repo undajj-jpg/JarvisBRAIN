@@ -1,6 +1,12 @@
 # JarvisBRAIN 🧠🎙️
 
 Asistente de voz de **baja latencia** para tu empresa, construido sobre Claude.
+
+> **Dos versiones en este repo:**
+> - `jarvis/` — versión de escritorio (Python): micro y altavoz locales,
+>   streaming websocket puro. La de menor latencia.
+> - `web/` — versión web (Next.js) **desplegable en Vercel**: úsala desde el
+>   navegador o el móvil, sin instalar nada. Guía: [`web/README.md`](web/README.md).
 Le hablas, te responde en voz, y tiene acceso real a los sistemas de la empresa:
 
 - **Correo**: revisa las cuentas de la empresa, resume lo importante y **redacta
